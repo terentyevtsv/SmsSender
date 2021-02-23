@@ -1,0 +1,60 @@
+.visually-hidden:not(:focus):not(:active),
+input[type='checkbox'].visually-hidden,
+input[type='radio'].visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  -webkit-clip-path: inset(100%);
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.App {
+  width: 100%;
+}
+
+.wrapper {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.full-container {
+  display: flex;
+}
+
+.field-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.field-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.btn-send {
+  align-self: flex-end;
+}
+
+.text-field {
+  resize: none;
+}
+
+.statistics {
+  align-self: flex-end;
+  font-size: 0.75em;
+}
+
+.sms-list {
+  border-collapse: collapse;
+}
+
+.cell-item {
+  border: 1px solid black;
+}
