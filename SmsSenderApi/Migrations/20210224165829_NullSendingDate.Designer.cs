@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmsSenderApi.Models;
@@ -9,9 +10,10 @@ using SmsSenderApi.Models;
 namespace SmsSenderApi.Migrations
 {
     [DbContext(typeof(SmsSenderContext))]
-    partial class SmsSenderContextModelSnapshot : ModelSnapshot
+    [Migration("20210224165829_NullSendingDate")]
+    partial class NullSendingDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,13 +45,12 @@ namespace SmsSenderApi.Migrations
                         .HasColumnType("text")
                         .HasColumnName("sender_name");
 
-                    b.Property<DateTime>("SendingDate")
-                        .ValueGeneratedOnAdd()
+                    b.Property<DateTime?>("SendingDate")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("sending_date")
-                        .HasDefaultValueSql("NOW()");
+                        .HasColumnName("sending_date");
 
                     b.Property<string>("SmsId")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("sms_id");
 

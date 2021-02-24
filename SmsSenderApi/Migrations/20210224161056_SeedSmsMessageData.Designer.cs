@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmsSenderApi.Models;
@@ -9,9 +10,10 @@ using SmsSenderApi.Models;
 namespace SmsSenderApi.Migrations
 {
     [DbContext(typeof(SmsSenderContext))]
-    partial class SmsSenderContextModelSnapshot : ModelSnapshot
+    [Migration("20210224161056_SeedSmsMessageData")]
+    partial class SeedSmsMessageData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,8 +37,7 @@ namespace SmsSenderApi.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasMaxLength(11)
-                        .HasColumnType("character varying(11)")
+                        .HasColumnType("text")
                         .HasColumnName("phone_number");
 
                     b.Property<string>("SenderName")
@@ -44,10 +45,8 @@ namespace SmsSenderApi.Migrations
                         .HasColumnName("sender_name");
 
                     b.Property<DateTime>("SendingDate")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("sending_date")
-                        .HasDefaultValueSql("NOW()");
+                        .HasColumnName("sending_date");
 
                     b.Property<string>("SmsId")
                         .HasColumnType("text")
@@ -68,7 +67,7 @@ namespace SmsSenderApi.Migrations
                             MessageText = "тестовое сообщение2",
                             PhoneNumber = "79270095932",
                             SenderName = "VIRTA",
-                            SendingDate = new DateTime(2021, 2, 22, 5, 17, 52, 0, DateTimeKind.Unspecified),
+                            SendingDate = new DateTime(1970, 1, 19, 16, 19, 31, 72, DateTimeKind.Unspecified),
                             SmsId = "510433335",
                             Status = 1
                         },
@@ -78,7 +77,7 @@ namespace SmsSenderApi.Migrations
                             MessageText = "тест сообщение4тест сообщение4тест сообщение4тест сообщение4тест сообщение4тест сообщение4",
                             PhoneNumber = "79270095932",
                             SenderName = "VIRTA",
-                            SendingDate = new DateTime(2021, 2, 22, 5, 17, 52, 0, DateTimeKind.Unspecified),
+                            SendingDate = new DateTime(1970, 1, 19, 16, 19, 31, 72, DateTimeKind.Unspecified),
                             SmsId = "510434281",
                             Status = 1
                         });
