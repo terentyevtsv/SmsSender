@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SmsGorodService from "../services/sms-gorod-service";
 import SmsMessagesService from "../services/sms-messages-service";
 
 const SmsCreator = () => {
@@ -9,10 +10,16 @@ const SmsCreator = () => {
 
   useEffect(() => {
     const getSmsMessages = async () => {
+      // Получение информации о сохраненных смс в БД
       const smsMessages = await SmsMessagesService.getSmsMessages();
-      const smsIds = smsMessages.map((smsMessage) => smsMessage.smsId);
-      console.log(smsIds);
-    }
+
+      // Получение информации об смс-сообщениях от smsgorod
+      const smsIds = smsMessages.map((smsMessage) => smsMessage.smsId);      
+      const smsMessagesInfo = await SmsGorodService
+        .getSmsMessagesInformation(smsIds);
+
+      
+    };
 
     getSmsMessages();
   });
