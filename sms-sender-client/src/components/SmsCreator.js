@@ -1,9 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import SmsMessagesService from "../services/sms-messages-service";
 
 const SmsCreator = () => {
   const [messageStatistics, setMessageStatistics] = useState({
     messageLength: 0,
     smsAccount: 0
+  });
+
+  useEffect(() => {
+    const getSmsMessages = async () => {
+      const smsMessages = await SmsMessagesService.getSmsMessages();
+      const smsIds = smsMessages.map((smsMessage) => smsMessage.smsId);
+      console.log(smsIds);
+    }
+
+    getSmsMessages();
   });
 
   const handleSmsTextChange = (evt) => {

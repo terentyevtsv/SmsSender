@@ -28,6 +28,8 @@ namespace SmsSenderApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(); // добавляем сервисы CORS
+
             services.AddDbContext<SmsSenderContext>(opt =>
                 opt.UseNpgsql(Configuration.GetConnectionString("SmsSenderDatabase")));
             services.AddControllers();
@@ -45,7 +47,7 @@ namespace SmsSenderApi
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseCors(builder => builder.AllowAnyOrigin());
 
             app.UseEndpoints(endpoints =>
             {
