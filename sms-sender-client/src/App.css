@@ -57,4 +57,15 @@ input[type='radio'].visually-hidden {
 
 .cell-item {
   border: 1px solid black;
+  text-align: center;
+}
+
+.text-cell-item {
+  border: 1px solid black;
+  text-align: start;
+  padding: 10px;
+}
+
+.sms-form-container {
+  width: 30%;
 }

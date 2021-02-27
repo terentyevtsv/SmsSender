@@ -1,27 +1,9 @@
-import React, { useEffect, useState } from "react";
-import SmsGorodService from "../services/sms-gorod-service";
-import SmsMessagesService from "../services/sms-messages-service";
+import React, { useState } from "react";
 
 const SmsCreator = () => {
   const [messageStatistics, setMessageStatistics] = useState({
     messageLength: 0,
     smsAccount: 0
-  });
-
-  useEffect(() => {
-    const getSmsMessages = async () => {
-      // Получение информации о сохраненных смс в БД
-      const smsMessages = await SmsMessagesService.getSmsMessages();
-
-      // Получение информации об смс-сообщениях от smsgorod
-      const smsIds = smsMessages.map((smsMessage) => smsMessage.smsId);      
-      const smsMessagesInfo = await SmsGorodService
-        .getSmsMessagesInformation(smsIds);
-
-      
-    };
-
-    getSmsMessages();
   });
 
   const handleSmsTextChange = (evt) => {
@@ -44,12 +26,13 @@ const SmsCreator = () => {
   return (
     <form className="field-list">
       <div className="field-item">        
-        <label for="sms-text">Текст:</label>
+        <label htmlFor="sms-text">Текст:</label>
         <textarea
           className="text-field"
           id="sms-text"
           onChange={handleSmsTextChange}
           maxLength="350"
+          placeholder="от 1 до 350 символов"
           required
         >          
         </textarea>                
@@ -57,12 +40,17 @@ const SmsCreator = () => {
       </div>
       
       <div className="field-item">
-        <label for="phone-number">Номер получателя:</label>
-        <input type="tel" id="phone-number" required/>
+        <label htmlFor="phone-number">Номер получателя:</label>
+        <input 
+          type="text"
+          id="phone-number"
+          pattern="79[0-9]{9}"
+          placeholder="79********* пример: 79123456789"
+          required/>
       </div>
 
       <div className="field-item">
-        <label for="sender-name">Имя отправителя:</label>
+        <label htmlFor="sender-name">Имя отправителя:</label>
         <input type="text" id="sender-name"/>
       </div>
 

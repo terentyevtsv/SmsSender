@@ -9,7 +9,7 @@ const getSmsMessagesInformation = async (smsIds) => {
   const smsIdsObject = {
     "apiKey": apiKey,
     "apiSmsIdList": smsIds
-  }
+  };
 
   const options = {
     method: MethodTypes.POST,
@@ -18,15 +18,51 @@ const getSmsMessagesInformation = async (smsIds) => {
       "accept": "application/json"
     },
     body: JSON.stringify(smsIdsObject)
-  }
+  };
   
   const response = await fetch(path, options);
 
   return await response.json();
 };
 
+const sendSmsMessage = async (smsMessage) => {
+  const path = `${basePath}/create`;
+  const defaultSenderName = "TITAN";
+
+  let senderName = defaultSenderName;
+  if (smsMessage.senderName !== "") {
+    senderName = smsMessage.senderName;
+  }
+
+  const sms = {
+    "apiKey": apiKey,
+    "sms": [
+      {
+        "channel": "char",
+        "sender": senderName,
+        "text": smsMessage.textContent,
+        "phone": smsMessage.phoneNumber
+      }
+    ]
+  };
+
+  const options = {
+    method: MethodTypes.POST,
+    headers: {
+      "Content-Type": "application/json",
+      "accept": "application/json"
+    },
+    body: JSON.stringify(sms)
+  };
+
+  const response = await fetch(path, options);
+
+  return await response.json();
+};
+
 const SmsGorodService = {
-  getSmsMessagesInformation
+  getSmsMessagesInformation,
+  sendSmsMessage
 };
 
 export default SmsGorodService;

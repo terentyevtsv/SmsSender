@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmsSenderApi.Models;
+using SmsSenderApi.Models.Dto;
 
 namespace SmsSenderApi.Controllers
 {
@@ -70,6 +71,45 @@ namespace SmsSenderApi.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<IEnumerable<SmsMessage>>> PutSmsMessages(
+            SmsMessageDto[] smsMessages)
+        {
+            var ids = smsMessages
+                .Select(s => s.Id)
+                .ToList();
+
+            var tmpSmsMessages = _context.SmsMessages
+                .Where(s => ids.Contains(s.Id))
+                .ToList();
+
+            foreach (var smsMessage in smsMessages)
+            {
+                var tmpMessage = tmpSmsMessages
+                    .SingleOrDefault(s => s.Id == smsMessage.Id);
+                if (tmpMessage != null)
+                {
+                    tmpMessage.SendingDate = smsMessage.SendingDate;
+                    tmpMessage.Status = smsMessage.Status;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                var areSmsMessagesExists = tmpSmsMessages.Any();
+                if (!areSmsMessagesExists)                
+                    return NotFound();
+                
+                throw;                
+            }
+
+            return await GetSmsMessages();
         }
 
         // POST: api/SmsMessages

@@ -14,7 +14,7 @@ namespace SmsSenderApi.Models
         public int Id { get; set; }
 
         [Column("sms_id")]
-        public string SmsId { get; set; }
+        public int? SmsId { get; set; }
 
         [Required]
         [MaxLength(11, ErrorMessage = "Максимальная длина номера 11 символов")]
@@ -25,6 +25,7 @@ namespace SmsSenderApi.Models
         public string SenderName { get; set; }
 
         [Required]
+        [MaxLength(350, ErrorMessage = "Максимальная длина 5 sms * 70 симв/sms = 350 символов")]
         [Column("message_text")]
         public string MessageText { get; set; }
 

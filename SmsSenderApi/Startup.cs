@@ -47,7 +47,10 @@ namespace SmsSenderApi
 
             app.UseRouting();
 
-            app.UseCors(builder => builder.AllowAnyOrigin());
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .WithMethods("GET", "POST", "PUT")
+                .WithHeaders("Content-Type"));
 
             app.UseEndpoints(endpoints =>
             {

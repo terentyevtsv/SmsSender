@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmsSenderApi.Models;
@@ -9,9 +10,10 @@ using SmsSenderApi.Models;
 namespace SmsSenderApi.Migrations
 {
     [DbContext(typeof(SmsSenderContext))]
-    partial class SmsSenderContextModelSnapshot : ModelSnapshot
+    [Migration("20210227191858_RemoveStringSmsId")]
+    partial class RemoveStringSmsId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,8 +32,7 @@ namespace SmsSenderApi.Migrations
 
                     b.Property<string>("MessageText")
                         .IsRequired()
-                        .HasMaxLength(350)
-                        .HasColumnType("character varying(350)")
+                        .HasColumnType("text")
                         .HasColumnName("message_text");
 
                     b.Property<string>("PhoneNumber")
@@ -50,9 +51,9 @@ namespace SmsSenderApi.Migrations
                         .HasColumnName("sending_date")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<int?>("SmsId")
+                    b.Property<int?>("SmsIntId")
                         .HasColumnType("integer")
-                        .HasColumnName("sms_id");
+                        .HasColumnName("sms_int_id");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer")
@@ -70,7 +71,7 @@ namespace SmsSenderApi.Migrations
                             PhoneNumber = "79270095932",
                             SenderName = "VIRTA",
                             SendingDate = new DateTime(2021, 2, 22, 5, 17, 52, 0, DateTimeKind.Unspecified),
-                            SmsId = 510433335,
+                            SmsIntId = 510433335,
                             Status = 1
                         },
                         new
@@ -80,7 +81,7 @@ namespace SmsSenderApi.Migrations
                             PhoneNumber = "79270095932",
                             SenderName = "VIRTA",
                             SendingDate = new DateTime(2021, 2, 22, 5, 17, 52, 0, DateTimeKind.Unspecified),
-                            SmsId = 510434281,
+                            SmsIntId = 510434281,
                             Status = 1
                         });
                 });

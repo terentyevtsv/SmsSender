@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmsSenderApi.Models;
@@ -9,9 +10,10 @@ using SmsSenderApi.Models;
 namespace SmsSenderApi.Migrations
 {
     [DbContext(typeof(SmsSenderContext))]
-    partial class SmsSenderContextModelSnapshot : ModelSnapshot
+    [Migration("20210227192051_AddNullableIntSmsId")]
+    partial class AddNullableIntSmsId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,8 +32,7 @@ namespace SmsSenderApi.Migrations
 
                     b.Property<string>("MessageText")
                         .IsRequired()
-                        .HasMaxLength(350)
-                        .HasColumnType("character varying(350)")
+                        .HasColumnType("text")
                         .HasColumnName("message_text");
 
                     b.Property<string>("PhoneNumber")

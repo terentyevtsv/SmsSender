@@ -10,6 +10,11 @@ namespace SmsSenderApi.Models
         {
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.LogTo(message => System.Diagnostics.Debug.WriteLine(message));
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("sms_sender_db");
@@ -24,8 +29,8 @@ namespace SmsSenderApi.Models
                     MessageText = "тестовое сообщение2",
                     SenderName = "VIRTA",
                     Status = SmsMessageStatus.Delivered,
-                    SendingDate = sentDate,
-                    SmsId = "510433335"
+                    SendingDate = sentDate,                    
+                    SmsId = 510433335
                 },
                 new SmsMessage
                 {
@@ -34,8 +39,8 @@ namespace SmsSenderApi.Models
                     MessageText = "тест сообщение4тест сообщение4тест сообщение4тест сообщение4тест сообщение4тест сообщение4",
                     SenderName = "VIRTA",
                     Status = SmsMessageStatus.Delivered,
-                    SendingDate = sentDate,
-                    SmsId = "510434281"
+                    SendingDate = sentDate,                    
+                    SmsId = 510434281
                 });
 
             modelBuilder.Entity<SmsMessage>()
