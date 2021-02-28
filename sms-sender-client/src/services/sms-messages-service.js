@@ -9,7 +9,7 @@ const getSmsMessages = async () => {
   return smsMessages;  
 };
 
-const updateSmsMessage = async (smsMessages) => {
+const updateSmsMessages = async (smsMessages) => {
   const options = {
     method: MethodTypes.PUT,
     headers: {
@@ -24,9 +24,25 @@ const updateSmsMessage = async (smsMessages) => {
   return await response.json();
 };
 
+const createSmsMessage = async (smsMessage) => {
+  const options = {
+    method: MethodTypes.POST,
+    headers: {
+      "Content-Type": "application/json",
+      "accept": "application/json"      
+    },
+    body: JSON.stringify(smsMessage)
+  };
+
+  const response = await fetch(basePath, options);
+
+  return await response.json();
+}
+
 const SmsMessagesService = {
   getSmsMessages,
-  updateSmsMessage
+  updateSmsMessages,
+  createSmsMessage
 };
 
 export default SmsMessagesService;

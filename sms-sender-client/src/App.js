@@ -8,41 +8,43 @@ import moment from "moment";
 
 function App() {
   const [smsMessages, setSmsMessages] = useState([]);
+
+  const updateAndShowSmsMessages = async () => {
+    // Получение информации о сохраненных смс в БД
+    const smsMessages = await SmsMessagesService.getSmsMessages();
+    console.log(smsMessages);
+
+    // Получение информации об смс-сообщениях от smsgorod
+    const smsIds = smsMessages.map((smsMessage) => smsMessage.smsId);      
+    const smsMessagesInfoObject = await SmsGorodService
+      .getSmsMessagesInformation(smsIds);
+    console.log(smsMessagesInfoObject);
+
+    const paramSmsMessages = [];
+
+    // Цикл по всем сообщениям, сохраненным в БД
+    smsMessages.forEach((smsMessage) => {
+      const tmpSmsMessage = smsMessagesInfoObject.data
+        .find((smsMessage1) => smsMessage1.id === smsMessage.smsId);
+      if (tmpSmsMessage !== undefined) {
+        paramSmsMessages.push({
+          id: smsMessage.id,            
+          sendingDate: new Date(tmpSmsMessage.sentAt * 1000),
+          status: smsMessage.status
+        });
+      }
+    });
+
+    const allSmsMessages = await SmsMessagesService
+      .updateSmsMessages(paramSmsMessages);
+    setSmsMessages(allSmsMessages);
+  };
   
-  useEffect(() => {
-    const getSmsMessages = async () => {
-      // Получение информации о сохраненных смс в БД
-      const smsMessages = await SmsMessagesService.getSmsMessages();
-      console.log(smsMessages);
+  useEffect(updateAndShowSmsMessages, []);
 
-      // Получение информации об смс-сообщениях от smsgorod
-      const smsIds = smsMessages.map((smsMessage) => smsMessage.smsId);      
-      const smsMessagesInfoObject = await SmsGorodService
-        .getSmsMessagesInformation(smsIds);
-      console.log(smsMessagesInfoObject);
-
-      const paramSmsMessages = [];
-
-      // Цикл по всем сообщениям, сохраненным в БД
-      smsMessages.forEach((smsMessage) => {
-        const tmpSmsMessage = smsMessagesInfoObject.data
-          .find((smsMessage1) => smsMessage1.id === smsMessage.smsId);
-        if (tmpSmsMessage !== undefined) {
-          paramSmsMessages.push({
-            id: smsMessage.id,            
-            sendingDate: new Date(tmpSmsMessage.sentAt * 1000),
-            status: smsMessage.status
-          });
-        }
-      });
-
-      const allSmsMessages = await SmsMessagesService
-        .updateSmsMessage(paramSmsMessages);
-      setSmsMessages(allSmsMessages);
-    };
-
-    getSmsMessages();
-  }, []);
+  const handleSmsSent = (allSmsMessages) => {
+    setSmsMessages(allSmsMessages);
+  };
 
   return (
     <div className="App">
@@ -51,7 +53,7 @@ function App() {
         <div className="full-container">
           <section className="sms-form-container">
             <h2 className="visually-hidden">Форма отправки сообщения</h2>
-            <SmsCreator/>
+            <SmsCreator onSmsSent={handleSmsSent}/>
           </section>
           <section className="sms-list-container">
             <h2 className="visually-hidden">Список отправленных сообщений</h2>

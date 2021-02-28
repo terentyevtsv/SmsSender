@@ -42,11 +42,6 @@ namespace SmsSenderApi.Models
                     SendingDate = sentDate,                    
                     SmsId = 510434281
                 });
-
-            modelBuilder.Entity<SmsMessage>()
-                .Property(s => s.SendingDate)
-                .HasDefaultValueSql("NOW()")
-                .ValueGeneratedOnAdd();            
         }
 
         public DbSet<SmsMessage> SmsMessages { get; set; }

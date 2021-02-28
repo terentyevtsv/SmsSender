@@ -115,12 +115,12 @@ namespace SmsSenderApi.Controllers
         // POST: api/SmsMessages
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<SmsMessage>> PostSmsMessage(SmsMessage smsMessage)
+        public async Task<ActionResult<IEnumerable<SmsMessage>>> PostSmsMessage(SmsMessage smsMessage)
         {
             _context.SmsMessages.Add(smsMessage);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSmsMessage", new { id = smsMessage.Id }, smsMessage);
+            return await GetSmsMessages();
         }
 
         // DELETE: api/SmsMessages/5
