@@ -41,6 +41,8 @@ const SmsCreator = (props) => {
   const handleSubmit = async (evt) => {
     evt.preventDefault();
 
+    const DB_ERROR_MESSAGE = "Ошибка сервиса БД:"
+
     const SENT = "sent";
     const DELIVERED = "delivered";
     const ERROR = "error";
@@ -58,24 +60,57 @@ const SmsCreator = (props) => {
     };
 
     // Отправка запроса на создание сообщения
-    const sentMessageInfos = await SmsGorodService.sendSmsMessage(smsMessage);
-    if (sentMessageInfos.data.length === 1) {
-      let status = SmsGorodStatus[ERROR];
-      if (sentMessageInfos.data[0].status === SENT ||
-          sentMessageInfos.data[0].status === DELIVERED) {
-        status = SmsGorodStatus[sentMessageInfos.data[0].status];            
+    let allSmsMessages;
+    let smsId;
+    let status;
+
+    const errorDbSmsMessage = {
+      smsId: null,
+      senderDate: null,
+      phoneNumber,
+      senderName,
+      messageText: messageStatistics.messageText,
+      status: SmsGorodStatus[ERROR]
+    };
+
+    try {
+      const sentMessageInfos = await SmsGorodService.sendSmsMessage(smsMessage);
+      if (sentMessageInfos.data[0].status === ERROR) {
+        alert(sentMessageInfos.data[0].errorDescription);
+        return;
+      }
+      status = SmsGorodStatus[ERROR];
+      if (sentMessageInfos.data[0].status !== SENT ||
+          sentMessageInfos.data[0].status !== DELIVERED) {
+        alert(`Неизвестный статус сообщения [${sentMessageInfos.data[0].status}]!`);
+        return;
       }
 
-      // После запроса получили smsId из сервиса smsgorod
-      const smsId = sentMessageInfos.data[0].id;
+      status = SmsGorodStatus[sentMessageInfos.data[0].status];
 
+      // После запроса получили smsId из сервиса smsgorod
+      smsId = sentMessageInfos.data[0].id;
+    } catch (error) {
+
+      try {
+        allSmsMessages = await SmsMessagesService
+          .createSmsMessage(errorDbSmsMessage);
+        props.onSmsSent(allSmsMessages);
+      } catch (dbError) {
+        alert(`${DB_ERROR_MESSAGE} ${dbError}`);
+      }     
+
+      return;
+    }
+
+    try {
       // Обратились за последней информацией по созданному сообщению
       const smsInfo = await SmsGorodService.getSmsMessagesInformation([smsId]);
       
       const senderDate = smsInfo.data[0].sentAt !== null 
         ? new Date(smsInfo.data[0].sentAt * 1000) 
         : null;
-      
+
       // Часть актуальных данных (smsId, status и sendingDate) взяли из smsgorod,
       // остальное из формы заполнения
       const dbSmsMessage = {
@@ -87,11 +122,24 @@ const SmsCreator = (props) => {
         status
       };
 
-      const allSmsMessages = await SmsMessagesService
-        .createSmsMessage(dbSmsMessage);
-      
-      props.onSmsSent(allSmsMessages);
-    }
+      try {
+        allSmsMessages = await SmsMessagesService
+          .createSmsMessage(dbSmsMessage);
+      } catch (dbError) {
+        alert(`${DB_ERROR_MESSAGE} ${dbError}`);
+        return;
+      }
+    } catch (error) {
+      try {
+        allSmsMessages = await SmsMessagesService
+          .createSmsMessage(errorDbSmsMessage); 
+      } catch (dbError) {
+        alert(`${DB_ERROR_MESSAGE} ${dbError}`);
+        return;
+      }     
+    }      
+    
+    props.onSmsSent(allSmsMessages);    
   };
 
   return (
