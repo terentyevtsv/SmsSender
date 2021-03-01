@@ -6,7 +6,7 @@ namespace SmsSenderApi.Models.Dto
     {
         public int Id { get; set; }
 
-        public DateTime SendingDate { get; set; }
+        public DateTime? SendingDate { get; set; }
 
         public SmsMessageStatus Status { get; set; }
     }

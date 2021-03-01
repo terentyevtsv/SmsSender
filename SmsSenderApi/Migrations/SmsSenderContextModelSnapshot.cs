@@ -45,13 +45,8 @@ namespace SmsSenderApi.Migrations
                         .HasColumnName("sender_name");
 
                     b.Property<DateTime?>("SendingDate")
-                        .IsRequired()
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("sending_date");
-
-                    b.Property<DateTime?>("SendingDate1")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("sending_date_1");
 
                     b.Property<int?>("SmsId")
                         .HasColumnType("integer")

@@ -29,13 +29,8 @@ namespace SmsSenderApi.Models
         [Column("message_text")]
         public string MessageText { get; set; }
 
-        [Required]
-        [Column("sending_date")]
-        
-        public DateTime? SendingDate { get; set; }
-
-        [Column("sending_date_1")]
-        public DateTime? SendingDate1 { get; set; }
+        [Column("sending_date")]        
+        public DateTime? SendingDate { get; set; }        
 
         [Column("status")]
         public SmsMessageStatus Status { get; set; }

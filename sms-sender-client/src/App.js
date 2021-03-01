@@ -29,14 +29,17 @@ function App() {
       if (tmpSmsMessage !== undefined) {
         paramSmsMessages.push({
           id: smsMessage.id,            
-          sendingDate: new Date(tmpSmsMessage.sentAt * 1000),
+          sendingDate: tmpSmsMessage.sentAt !== null 
+            ? new Date(tmpSmsMessage.sentAt * 1000)
+            : null,
           status: smsMessage.status
         });
       }
     });
 
     const allSmsMessages = await SmsMessagesService
-      .updateSmsMessages(paramSmsMessages);
+      .updateSmsMessages(paramSmsMessages);    
+
     setSmsMessages(allSmsMessages);
   };
   
@@ -70,7 +73,11 @@ function App() {
                 {smsMessages.map((smsMessage) => {
                   return (
                     <tr key={smsMessage.id}>
-                      <td className="cell-item">{moment(smsMessage.sendingDate).format("DD.MM.YYYY hh:mm")}</td>
+                      <td className="cell-item">
+                        {smsMessage.sendingDate !== null 
+                          ? moment(smsMessage.sendingDate).format("DD.MM.YYYY hh:mm") 
+                          : ""}
+                      </td>
                       <td className="cell-item">{smsMessage.phoneNumber}</td>
                       <td className="text-cell-item">{smsMessage.messageText}</td>
                       <td className="cell-item">{SmsStatus[smsMessage.status]}</td>

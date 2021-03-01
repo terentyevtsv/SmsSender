@@ -68,4 +68,5 @@ input[type='radio'].visually-hidden {
 
 .sms-form-container {
   width: 30%;
+  margin-right: 30px;
 }

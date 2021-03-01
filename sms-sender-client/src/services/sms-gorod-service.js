@@ -27,7 +27,7 @@ const getSmsMessagesInformation = async (smsIds) => {
 
 const sendSmsMessage = async (smsMessage) => {
   const path = `${basePath}/create`;
-  const defaultSenderName = "TITAN";
+  const defaultSenderName = "VIRTA";
 
   let senderName = defaultSenderName;
   if (smsMessage.senderName !== "") {

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { SmsGorodStatus } from "../constants";
 import SmsGorodService from "../services/sms-gorod-service";
 import SmsMessagesService from "../services/sms-messages-service";
 
@@ -67,8 +66,21 @@ const SmsCreator = (props) => {
         status = SmsGorodStatus[sentMessageInfos.data[0].status];            
       }
 
+      // После запроса получили smsId из сервиса smsgorod
+      const smsId = sentMessageInfos.data[0].id;
+
+      // Обратились за последней информацией по созданному сообщению
+      const smsInfo = await SmsGorodService.getSmsMessagesInformation([smsId]);
+      
+      const senderDate = smsInfo.data[0].sentAt !== null 
+        ? new Date(smsInfo.data[0].sentAt * 1000) 
+        : null;
+      
+      // Часть актуальных данных (smsId, status и sendingDate) взяли из smsgorod,
+      // остальное из формы заполнения
       const dbSmsMessage = {
-        smsId: sentMessageInfos.data[0].id,
+        smsId,
+        senderDate,
         phoneNumber,
         senderName,
         messageText: messageStatistics.messageText,
@@ -77,6 +89,7 @@ const SmsCreator = (props) => {
 
       const allSmsMessages = await SmsMessagesService
         .createSmsMessage(dbSmsMessage);
+      
       props.onSmsSent(allSmsMessages);
     }
   };

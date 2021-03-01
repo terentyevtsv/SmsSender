@@ -10,8 +10,8 @@ using SmsSenderApi.Models;
 namespace SmsSenderApi.Migrations
 {
     [DbContext(typeof(SmsSenderContext))]
-    [Migration("20210224165829_NullSendingDate")]
-    partial class NullSendingDate
+    [Migration("20210228155827_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,7 +32,8 @@ namespace SmsSenderApi.Migrations
 
                     b.Property<string>("MessageText")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(350)
+                        .HasColumnType("character varying(350)")
                         .HasColumnName("message_text");
 
                     b.Property<string>("PhoneNumber")
@@ -49,9 +50,8 @@ namespace SmsSenderApi.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("sending_date");
 
-                    b.Property<string>("SmsId")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<int?>("SmsId")
+                        .HasColumnType("integer")
                         .HasColumnName("sms_id");
 
                     b.Property<int>("Status")
@@ -70,7 +70,7 @@ namespace SmsSenderApi.Migrations
                             PhoneNumber = "79270095932",
                             SenderName = "VIRTA",
                             SendingDate = new DateTime(2021, 2, 22, 5, 17, 52, 0, DateTimeKind.Unspecified),
-                            SmsId = "510433335",
+                            SmsId = 510433335,
                             Status = 1
                         },
                         new
@@ -80,7 +80,7 @@ namespace SmsSenderApi.Migrations
                             PhoneNumber = "79270095932",
                             SenderName = "VIRTA",
                             SendingDate = new DateTime(2021, 2, 22, 5, 17, 52, 0, DateTimeKind.Unspecified),
-                            SmsId = "510434281",
+                            SmsId = 510434281,
                             Status = 1
                         });
                 });
