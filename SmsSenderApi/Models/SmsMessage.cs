@@ -34,6 +34,12 @@ namespace SmsSenderApi.Models
 
         [Column("status")]
         public SmsMessageStatus Status { get; set; }
+
+        /// <summary>
+        /// Текст статуса (В случае необходимости появляется сообщение об ошибке)
+        /// </summary>
+        [Column("status_text")]
+        public string StatusText { get; set; }
     }
 
     public enum SmsMessageStatus

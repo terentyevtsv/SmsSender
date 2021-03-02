@@ -53,12 +53,6 @@ const SmsCreator = (props) => {
       [ERROR]: 2
     };
 
-    const smsMessage = {
-      senderName,
-      textContent: messageStatistics.messageText,
-      phoneNumber
-    };
-
     // Отправка запроса на создание сообщения
     let allSmsMessages;
     let smsId;
@@ -70,7 +64,14 @@ const SmsCreator = (props) => {
       phoneNumber,
       senderName,
       messageText: messageStatistics.messageText,
-      status: SmsGorodStatus[ERROR]
+      status: SmsGorodStatus[ERROR],
+      statusText: null
+    };
+
+    const smsMessage = {
+      senderName,
+      textContent: messageStatistics.messageText,
+      phoneNumber
     };
 
     try {
@@ -80,7 +81,7 @@ const SmsCreator = (props) => {
         return;
       }
       status = SmsGorodStatus[ERROR];
-      if (sentMessageInfos.data[0].status !== SENT ||
+      if (sentMessageInfos.data[0].status !== SENT &&
           sentMessageInfos.data[0].status !== DELIVERED) {
         alert(`Неизвестный статус сообщения [${sentMessageInfos.data[0].status}]!`);
         return;
@@ -91,6 +92,9 @@ const SmsCreator = (props) => {
       // После запроса получили smsId из сервиса smsgorod
       smsId = sentMessageInfos.data[0].id;
     } catch (error) {
+
+      errorDbSmsMessage.statusText =
+        `Ошибка ${error.name}: ${error.message}`;
 
       try {
         allSmsMessages = await SmsMessagesService
@@ -111,13 +115,15 @@ const SmsCreator = (props) => {
         ? new Date(smsInfo.data[0].sentAt * 1000) 
         : null;
 
+      const tmpSenderName = smsInfo.data[0].sender;
+
       // Часть актуальных данных (smsId, status и sendingDate) взяли из smsgorod,
       // остальное из формы заполнения
       const dbSmsMessage = {
         smsId,
         senderDate,
         phoneNumber,
-        senderName,
+        senderName: tmpSenderName,
         messageText: messageStatistics.messageText,
         status
       };
@@ -130,6 +136,9 @@ const SmsCreator = (props) => {
         return;
       }
     } catch (error) {
+      errorDbSmsMessage.smsId = smsId;
+      errorDbSmsMessage.statusText =
+        `Ошибка ${error.name}: ${error.message}`;
       try {
         allSmsMessages = await SmsMessagesService
           .createSmsMessage(errorDbSmsMessage); 

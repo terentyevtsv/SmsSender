@@ -23,7 +23,9 @@ namespace SmsSenderApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SmsMessage>>> GetSmsMessages()
         {
-            return await _context.SmsMessages.ToListAsync();
+            return await _context.SmsMessages
+                .OrderBy(s => s.SendingDate)
+                .ToListAsync();
         }
 
         // GET: api/SmsMessages/5

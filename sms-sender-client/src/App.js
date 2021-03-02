@@ -10,37 +10,41 @@ function App() {
   const [smsMessages, setSmsMessages] = useState([]);
 
   const updateAndShowSmsMessages = async () => {
-    // Получение информации о сохраненных смс в БД
-    const smsMessages = await SmsMessagesService.getSmsMessages();
-    console.log(smsMessages);
+    try {
+      // Получение информации о сохраненных смс в БД
+      const smsMessages = await SmsMessagesService.getSmsMessages();
+      console.log(smsMessages);
 
-    // Получение информации об смс-сообщениях от smsgorod
-    const smsIds = smsMessages.map((smsMessage) => smsMessage.smsId);      
-    const smsMessagesInfoObject = await SmsGorodService
-      .getSmsMessagesInformation(smsIds);
-    console.log(smsMessagesInfoObject);
+      // Получение информации об смс-сообщениях от smsgorod
+      const smsIds = smsMessages.map((smsMessage) => smsMessage.smsId);      
+      const smsMessagesInfoObject = await SmsGorodService
+        .getSmsMessagesInformation(smsIds);
+      console.log(smsMessagesInfoObject);
 
-    const paramSmsMessages = [];
+      const paramSmsMessages = [];
 
-    // Цикл по всем сообщениям, сохраненным в БД
-    smsMessages.forEach((smsMessage) => {
-      const tmpSmsMessage = smsMessagesInfoObject.data
-        .find((smsMessage1) => smsMessage1.id === smsMessage.smsId);
-      if (tmpSmsMessage !== undefined) {
-        paramSmsMessages.push({
-          id: smsMessage.id,            
-          sendingDate: tmpSmsMessage.sentAt !== null 
-            ? new Date(tmpSmsMessage.sentAt * 1000)
-            : null,
-          status: smsMessage.status
-        });
-      }
-    });
+      // Цикл по всем сообщениям, сохраненным в БД
+      smsMessages.forEach((smsMessage) => {
+        const tmpSmsMessage = smsMessagesInfoObject.data
+          .find((smsMessage1) => smsMessage1.id === smsMessage.smsId);
+        if (tmpSmsMessage !== undefined) {
+          paramSmsMessages.push({
+            id: smsMessage.id,            
+            sendingDate: tmpSmsMessage.sentAt !== null 
+              ? new Date(tmpSmsMessage.sentAt * 1000)
+              : null,
+            status: smsMessage.status
+          });
+        }
+      });
 
-    const allSmsMessages = await SmsMessagesService
-      .updateSmsMessages(paramSmsMessages);    
+      const allSmsMessages = await SmsMessagesService
+        .updateSmsMessages(paramSmsMessages);    
 
-    setSmsMessages(allSmsMessages);
+      setSmsMessages(allSmsMessages);  
+    } catch (error) {
+      alert(`Ошибка ${error.name}: ${error.message}`);
+    }    
   };
   
   useEffect(updateAndShowSmsMessages, []);
@@ -67,6 +71,7 @@ function App() {
                   <th className="cell-item">Номер получателя</th>
                   <th className="cell-item">Текст сообщения</th>
                   <th className="cell-item">Статус сообщения</th>
+                  <th className="cell-item">Текст ошибки</th>
                 </tr>
               </thead>
               <tbody>
@@ -81,6 +86,7 @@ function App() {
                       <td className="cell-item">{smsMessage.phoneNumber}</td>
                       <td className="text-cell-item">{smsMessage.messageText}</td>
                       <td className="cell-item">{SmsStatus[smsMessage.status]}</td>
+                      <td className="text-cell-item">{smsMessage.statusText}</td>
                     </tr>
                   );                
                 })}
