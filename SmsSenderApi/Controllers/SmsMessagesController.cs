@@ -77,6 +77,9 @@ namespace SmsSenderApi.Controllers
         public async Task<ActionResult<IEnumerable<SmsMessage>>> PutSmsMessages(
             SmsMessageDto[] smsMessages)
         {
+            if (!smsMessages.Any())
+                return await GetSmsMessages();
+
             var ids = smsMessages
                 .Select(s => s.Id)
                 .ToList();

@@ -39,11 +39,19 @@ function App() {
       });
 
       const allSmsMessages = await SmsMessagesService
-        .updateSmsMessages(paramSmsMessages);    
+        .updateSmsMessages(paramSmsMessages);
 
       setSmsMessages(allSmsMessages);  
     } catch (error) {
       alert(`Ошибка ${error.name}: ${error.message}`);
+
+      try {
+        const allSmsMessages = await SmsMessagesService
+          .updateSmsMessages([]);
+        setSmsMessages(allSmsMessages); 
+      } catch (error) {
+        alert("smsgorod и сервис БД не работают!")
+      }      
     }    
   };
   
@@ -65,8 +73,8 @@ function App() {
           <section className="sms-list-container">
             <h2 className="visually-hidden">Список отправленных сообщений</h2>
             <table className="sms-list">
-              <thead>
-                <tr>
+              <thead className="header-container">
+                <tr className="header-row">
                   <th className="cell-item">Дата и время отправки</th>
                   <th className="cell-item">Номер получателя</th>
                   <th className="cell-item">Текст сообщения</th>
@@ -74,10 +82,10 @@ function App() {
                   <th className="cell-item">Текст ошибки</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="body-container">
                 {smsMessages.map((smsMessage) => {
                   return (
-                    <tr key={smsMessage.id}>
+                    <tr className="data-row" key={smsMessage.id}>
                       <td className="cell-item">
                         {smsMessage.sendingDate !== null 
                           ? moment(smsMessage.sendingDate).format("DD.MM.YYYY hh:mm") 

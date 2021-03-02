@@ -53,6 +53,16 @@ input[type='radio'].visually-hidden {
 
 .sms-list {
   border-collapse: collapse;
+  display: grid;
+
+  grid-template-columns: minmax(50px, 1fr) minmax(50px, 1fr) minmax(150px, 2fr) minmax(50px, 1fr) minmax(80px, 1fr);
+}
+
+.header-container,
+.body-container,
+.header-row,
+.data-row {
+  display: contents;
 }
 
 .cell-item {
